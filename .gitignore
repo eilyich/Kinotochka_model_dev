@@ -1,0 +1,7 @@
+best_model.h5
+model_dev_notebook.ipynb
+venv/
+.git/
+.idea/
+.ipynb_checkpoints/
+__pycache__/
