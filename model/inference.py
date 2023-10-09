@@ -1,41 +1,10 @@
-# import re
 import kinotochka_helpers as kh
-from inference_helpers import StringToList, AddOne
-
 import pandas as pd
 import numpy as np
 
 import joblib
 from keras.models import load_model
-# from sklearn.base import BaseEstimator, TransformerMixin
 from fastapi import FastAPI, HTTPException
-
-
-# class StringToList(BaseEstimator, TransformerMixin):
-#     def fit(self, X, y=None):
-#         self.input_features_ = X.columns
-#         return self
-#
-#     def transform(self, X, y=None):
-#         return X.map(self.string_to_list)
-#
-#     def string_to_list(self, x):
-#         if pd.isna(x):
-#             return x
-#         else:
-#             return [int(n) for n in re.split(',\s*|\s+', x)]
-#
-#     def get_feature_names(self, input_features=None):
-#         return self.input_features_
-#
-#
-# class AddOne(BaseEstimator, TransformerMixin):
-#     def fit(self, X, y=None):
-#         return self
-#
-#     def transform(self, X):
-#         return X + 1
-
 
 def user_processing(test_user_slug, raw=False):
     fitted_metrics = kh.data_metrics(mode='load')
@@ -201,15 +170,6 @@ def get_inference(data, raw=False) -> list:
 
     return one_user_results_sampler['movie_id'].tolist()
 
-
-# print(get_inference(
-#             user_processing(
-#                 'b712b896-6090-49b9-8d8f-4874cbd4013d'
-#             )
-#         ))
-
-
-
 app = FastAPI()
 
 
@@ -219,14 +179,14 @@ def get_forecast(user_id: str):
     if len(user_id) != 36:
         raise HTTPException(
             status_code=400,
-            detail="Проверьте идентификатор пользователя"
+            detail="Проверьте идентификатор пользователя (должно быть 36 символов)"
         )
 
-    else:
-        inference = get_inference(
-            user_processing(
-                user_id
-            )
+
+    inference = get_inference(
+        user_processing(
+            user_id
         )
+    )
 
     return {"response": inference}
